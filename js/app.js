@@ -1,3 +1,5 @@
+
+//load product
 const loadProducts = () => {
   const url = `https://fakestoreapi.com/products`;
   fetch(url)
@@ -17,11 +19,12 @@ const showProducts = (products) => {
       <div>
     <img class="product-image" src=${image}></img>
       </div>
-      <h3>${product.title}</h3>
+      <h4>${product.title}</h4>
       <p>Category: ${product.category}</p>
-      <h2>Price: $ ${product.price}</h2>
+      <p class="rate">Avg rating: ${product.rating.rate} (${product.rating.count})</p>
+      <h3>Price: $ ${product.price}</h3>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="showDetails(${product.id})" id="details-btn" class="btn btn-danger">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
@@ -81,3 +84,28 @@ const updateTotal = () => {
     getInputValue("total-tax");
   document.getElementById("total").innerText = grandTotal.toFixed(2);
 };
+
+
+//show Details
+const showDetails = (id) =>{
+  const url = `https://fakestoreapi.com/products/${id}`
+  fetch(url)
+  .then(res =>res.json())
+  .then(data => loadData(data))
+}
+
+const loadData = (data) =>{
+  console.log(data)
+  const div = document.getElementById('cart-details');
+  const element = document.createElement('div');
+  div.textContent = "";
+  element.innerHTML = `
+          <div class="jumbotron">
+              <img class="details-img" src="${data.image}">
+              <h1>${data.title} </h1>
+              <h2>Price: ${data.price}$</h2>
+              <p> description ${data.description}</p>
+          </div>
+  `
+  div.appendChild(element)
+}
