@@ -15,16 +15,16 @@ const showProducts = (products) => {
     const image = product.image;
     const div = document.createElement("div");
     div.classList.add("product");
-    div.innerHTML = `<div class="single-product">
+    div.innerHTML = `<div id="single-product" class="single-product">
       <div>
     <img class="product-image" src=${image}></img>
       </div>
       <h4>${product.title}</h4>
       <p>Category: ${product.category}</p>
-      <p class="rate">Avg rating: ${product.rating.rate} (${product.rating.count})</p>
+      <p class="rate"><i class="fas fa-star"></i> ${product.rating.rate}(${product.rating.count})</p>
       <h3>Price: $ ${product.price}</h3>
-      <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button onclick="showDetails(${product.id})" id="details-btn" class="btn btn-danger">Details</button></div>
+      <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn ">add to cart <i class="fas fa-shopping-cart"></i></button>
+      <button onclick="showDetails(${product.id})" id="details-btn" class="btn">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
@@ -102,10 +102,31 @@ const loadData = (data) =>{
   element.innerHTML = `
           <div class="jumbotron">
               <img class="details-img" src="${data.image}">
-              <h1>${data.title} </h1>
+              <h2>${data.title} </h2>
               <h2>Price: ${data.price}$</h2>
               <p> description ${data.description}</p>
           </div>
   `
   div.appendChild(element)
+}
+
+//search bar functionality
+document.getElementById('search-btn').addEventListener('click', ()=>{
+  const searchText = document.getElementById('input-field');
+  const searchValue = searchText.value.toLowerCase();
+  showSearchResult(searchValue);
+  searchText  .value = "";
+})
+//show search result
+const showSearchResult = (searchValue)=>{
+  const noteCards = document.getElementsByClassName('single-product');
+    Array.from(noteCards).forEach(function(element){
+        let cardTxt = element.getElementsByTagName("h4")[0].innerText;
+        if(cardTxt.includes(searchValue)){
+            element.style.display = "block";
+        }
+        else{
+            element.style.display = "none"}
+    })
+
 }
