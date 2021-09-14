@@ -11,6 +11,8 @@ loadProducts();
 // show all product in UI 
 const showProducts = (products) => {
   const allProducts = products.map((pd) => pd);
+  const element = document.getElementById("all-products");
+  element.textContent="";
   for (const product of allProducts) {
     const image = product.image;
     const div = document.createElement("div");
@@ -21,12 +23,12 @@ const showProducts = (products) => {
       </div>
       <h4>${product.title}</h4>
       <p>Category: ${product.category}</p>
-      <p class="rate"><i class="fas fa-star"></i> ${product.rating.rate}(${product.rating.count})</p>
+      <p class="rate"><i class="fas fa-star"></i> ${product.rating.rate}   <i class="fas fa-user"></i> ${product.rating.count}</p>
       <h3>Price: $ ${product.price}</h3>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn ">add to cart <i class="fas fa-shopping-cart"></i></button>
       <button onclick="showDetails(${product.id})" id="details-btn" class="btn">Details</button></div>
       `;
-    document.getElementById("all-products").appendChild(div);
+    element.appendChild(div);
   }
 };
 let count = 0;
@@ -113,15 +115,16 @@ const loadData = (data) =>{
 //search bar functionality
 document.getElementById('search-btn').addEventListener('click', ()=>{
   const searchText = document.getElementById('input-field');
-  const searchValue = searchText.value.toLowerCase();
+  const searchValue = searchText.value;
   showSearchResult(searchValue);
   searchText  .value = "";
 })
 //show search result
 const showSearchResult = (searchValue)=>{
-  const noteCards = document.getElementsByClassName('single-product');
+  console.log(searchValue)
+  const noteCards = document.getElementsByClassName('product');
     Array.from(noteCards).forEach(function(element){
-        let cardTxt = element.getElementsByTagName("h4")[0].innerText;
+        let cardTxt = element.getElementsByTagName("h4")[0].innerText.toLowerCase();
         if(cardTxt.includes(searchValue)){
             element.style.display = "block";
         }
@@ -130,3 +133,12 @@ const showSearchResult = (searchValue)=>{
     })
 
 }
+//specific catagories 
+document.getElementById('drop').addEventListener('click', (e)=>{
+  const element = e.target.innerText;
+  console.log(element)
+  const url = `https://fakestoreapi.com/products/category/${element}`
+  fetch(url)
+  .then(res => res.json())
+  .then(data => showProducts(data))
+})
